@@ -3,7 +3,7 @@
 
 **由于在 bilibili、QQ 等平台上，部分人为了获得早已明确写出解决方案的关于该工具的问题的帮助，干扰了我的正常生活，对我未按照其要求修改工具或增添功能进行无理的人身攻击，该项目永久停更。**
 
-**Due to some individuals on platforms like Bilibili and QQ interfering with my normal life in order to gain assistance with questions about the tool that already have clearly stated solutions, and due to their unreasonable personal attacks on me for not modifying or adding features to this tool as they requested, I have decided to permanently stop updating the project.**
+**Due to some individuals on platforms like Bilibili and QQ interfering with my normal life in order to gain assistance with questions about this tool that already have clearly stated solutions, and due to their unreasonable personal attacks on me for not modifying or adding features to this tool as they requested, I have decided to permanently stop updating the project.**
 
 A tool used to disable thermalmonitord to prevent throttling and screen dimming when iOS devices overheat. You can also disable OTA and UsageTrackingAgent with this.
 
