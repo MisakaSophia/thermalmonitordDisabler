@@ -1,7 +1,7 @@
 # thermalmonitordDisabler
 [中文](https://github.com/rponeawa/thermalmonitordDisabler/blob/main/README_CN.md)
 
-**由于在 bilibili、QQ 等平台上，部分人为了获得早已明确写出解决方案的关于该工具的问题的帮助，干扰了我的正常生活，对我未按照其要求修改工具或增添功能进行无理的人身攻击，该项目永久停更。**
+**由于在 bilibili、QQ 等平台上，部分人为了获得早已明确写出解决方案的关于该工具的问题的帮助，干扰了我的正常生活，对我未按照其要求修改工具或增添功能进行无理的人身攻击，该项目永久停更。若你在闲鱼等平台上看到有商家倒卖该工具，请帮忙点一下举报，不胜感激。**
 
 **Due to some individuals on platforms like Bilibili and QQ interfering with my normal life in order to gain assistance with questions about this tool that already have clearly stated solutions, and due to their unreasonable personal attacks on me for not modifying or adding features to this tool as they requested, I have decided to permanently stop updating the project.**
 
