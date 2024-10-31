@@ -10,7 +10,7 @@ from pymobiledevice3 import usbmux
 from pymobiledevice3.lockdown import create_using_usbmux
 
 import resources_rc
-from exploit.restore import restore_files, FileToRestore
+from Sparserestore.restore import restore_files, FileToRestore
 from devicemanagement.constants import Device
 
 class App(QtWidgets.QWidget):
@@ -24,6 +24,7 @@ class App(QtWidgets.QWidget):
         self.thermalmonitord = False
         self.disable_ota = False
         self.disable_usage_tracking_agent = False
+        self.skip_setup = True
 
         self.language_pack = {
             "en": {
@@ -159,10 +160,12 @@ class App(QtWidgets.QWidget):
                 try:
                     ld = create_using_usbmux(serial=current_device.serial)
                     vals = ld.all_values
+                    print(vals)
                     self.device = Device(
                         uuid=current_device.serial,
                         name=vals['DeviceName'],
                         version=vals['ProductVersion'],
+                        build=vals['BuildVersion'],
                         model=vals['ProductType'],
                         locale=ld.locale,
                         ld=ld
@@ -232,16 +235,48 @@ class App(QtWidgets.QWidget):
 
         QtCore.QTimer.singleShot(100, self._execute_changes)
 
+    def add_skip_setup(self, files_to_restore):
+        if self.skip_setup:
+            cloud_config_plist = {
+                "SkipSetup": ["WiFi", "Location", "Restore", "SIMSetup", "AppleID", "Diagnostics", "Passcode"],
+                "CloudConfigurationUIComplete": True,
+                "IsSupervised": False
+            }
+            files_to_restore.append(FileToRestore(
+                contents=plistlib.dumps(cloud_config_plist),
+                restore_path="systemgroup.com.apple.configurationprofiles/Library/ConfigurationProfiles/CloudConfigurationDetails.plist",
+                domain="SysSharedContainerDomain-."
+            ))
+            purplebuddy_plist = {
+                "SetupDone": True,
+                "SetupFinishedAllSteps": True,
+                "UserChoseLanguage": True
+            }
+            files_to_restore.append(FileToRestore(
+                contents=plistlib.dumps(purplebuddy_plist),
+                restore_path="mobile/com.apple.purplebuddy.plist",
+                domain="ManagedPreferencesDomain"
+            ))
+
     def _execute_changes(self):
         try:
+            files_to_restore = []
             print("\n" + self.language_pack[self.language]["apply_changes"])
             plist_data = self.modify_disabled_plist()
 
-            restore_files(files=[FileToRestore(
+            files_to_restore.append(FileToRestore(
                 contents=plist_data,
-                restore_path="/var/db/com.apple.xpc.launchd/",
-                restore_name="disabled.plist"
-            )], reboot=True, lockdown_client=self.device.ld)
+                restore_path="com.apple.xpc.launchd/disabled.plist",
+                domain="DatabaseDomain",
+                owner=0,
+                group=0
+            ))
+
+            self.add_skip_setup(files_to_restore)
+
+            print(files_to_restore)
+            
+            restore_files(files=files_to_restore, reboot=True, lockdown_client=self.device.ld)
 
             QtWidgets.QMessageBox.information(self, "Success", self.language_pack[self.language]["success"])
         except Exception as e:
@@ -252,30 +287,11 @@ class App(QtWidgets.QWidget):
             self.apply_button.setEnabled(True)
 
     def switch_language(self):
-        self.language = "zh" if self.language == "en" else "en"
-        self.setWindowTitle(self.language_pack[self.language]["title"])
-
-        self.modified_by_label.setText(self.language_pack[self.language]["modified_by"])
-        
-        if self.device:
-            self.update_device_info()
-        else:
-            self.device_info.setText(self.language_pack[self.language]["connect_prompt"])
-        
-        self.thermalmonitord_checkbox.setText(self.language_pack[self.language]["menu_options"][0])
-        self.disable_ota_checkbox.setText(self.language_pack[self.language]["menu_options"][1])
-        self.disable_usage_tracking_checkbox.setText(self.language_pack[self.language]["menu_options"][2])
-
-        self.apply_button.setText(self.language_pack[self.language]["menu_options"][3])
-        self.switch_language_button.setText(self.language_pack[self.language]["menu_options"][4])
-        self.refresh_button.setText(self.language_pack[self.language]["menu_options"][5])
+        self.language = "en" if self.language == "zh" else "zh"
+        self.init_ui()
 
 if __name__ == "__main__":
     import sys
-
-    qdarktheme.enable_hi_dpi()
     app = QtWidgets.QApplication(sys.argv)
-    qdarktheme.setup_theme()
-
-    gui = App()
+    window = App()
     sys.exit(app.exec_())

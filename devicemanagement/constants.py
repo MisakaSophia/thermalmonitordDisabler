@@ -2,13 +2,28 @@ from enum import Enum
 from pymobiledevice3.lockdown import LockdownClient
 
 class Device:
-    def __init__(self, uuid: int, name: str, version: str, model: str, locale: str, ld: LockdownClient):
+    def __init__(self, uuid: int, name: str, version: str, build: str, model: str, locale: str, ld: LockdownClient):
         self.uuid = uuid
         self.name = name
         self.version = version
+        self.build = build
         self.model = model
         self.locale = locale
         self.ld = ld
+
+    def has_exploit(self) -> bool:
+        parsed_ver: Version = Version(self.version)
+        # make sure versions past 17.7.1 but before 18.0 aren't supported
+        if (parsed_ver >= Version("17.7.1") and parsed_ver < Version("18.0")):
+            return False
+        if (parsed_ver < Version("18.1")
+            or self.build == "22B5007p" or self.build == "22B5023e"
+            or self.build == "22B5034e" or self.build == "22B5045g"):
+            return True
+        return False
+
+    def supported(self) -> bool:
+        return self.has_exploit()
 
 class Version:
     def __init__(self, major: int, minor: int = 0, patch: int = 0):
