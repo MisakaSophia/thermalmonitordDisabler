@@ -19,10 +19,11 @@ Note: It is highly recommended to use a virtual environment:
 python3 -m venv .env # only needed once
 # macOS/Linux:  source .env/bin/activate
 # Windows:      ".env/Scripts/activate.bat"
-pip3 install -r requirements.txt # only needed once
+pip3 install -r requirements.txt --ignore-requires-python # only needed once
 python3 gui_app.py
 ```
 Note: It may be either `python`/`pip` or `python3`/`pip3` depending on your path.
+You need to have `usbmux` service running to run this on Linux.
 
 **Find My should be turned off to use this tool.**
 
