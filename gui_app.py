@@ -287,11 +287,30 @@ class App(QtWidgets.QWidget):
             self.apply_button.setEnabled(True)
 
     def switch_language(self):
-        self.language = "en" if self.language == "zh" else "zh"
-        self.init_ui()
+        self.language = "zh" if self.language == "en" else "en"
+        self.setWindowTitle(self.language_pack[self.language]["title"])
+
+        self.modified_by_label.setText(self.language_pack[self.language]["modified_by"])
+        
+        if self.device:
+            self.update_device_info()
+        else:
+            self.device_info.setText(self.language_pack[self.language]["connect_prompt"])
+        
+        self.thermalmonitord_checkbox.setText(self.language_pack[self.language]["menu_options"][0])
+        self.disable_ota_checkbox.setText(self.language_pack[self.language]["menu_options"][1])
+        self.disable_usage_tracking_checkbox.setText(self.language_pack[self.language]["menu_options"][2])
+
+        self.apply_button.setText(self.language_pack[self.language]["menu_options"][3])
+        self.switch_language_button.setText(self.language_pack[self.language]["menu_options"][4])
+        self.refresh_button.setText(self.language_pack[self.language]["menu_options"][5])
 
 if __name__ == "__main__":
     import sys
+
+    qdarktheme.enable_hi_dpi()
     app = QtWidgets.QApplication(sys.argv)
-    window = App()
+    qdarktheme.setup_theme()
+
+    gui = App()
     sys.exit(app.exec_())
