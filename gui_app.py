@@ -237,10 +237,14 @@ class App(QtWidgets.QWidget):
 
     def add_skip_setup(self, files_to_restore):
         if self.skip_setup:
-            cloud_config_plist = {
-                "SkipSetup": ["WiFi", "Location", "Restore", "SIMSetup", "AppleID", "Diagnostics", "Passcode"],
+            cloud_config_plist: dict = {
+                "SkipSetup": ["WiFi", "Location", "Restore", "SIMSetup", "Android", "AppleID", "IntendedUser", "TOS", "Siri", "ScreenTime", "Diagnostics", "SoftwareUpdate", "Passcode", "Biometric", "Payment", "Zoom", "DisplayTone", "MessagingActivationUsingPhoneNumber", "HomeButtonSensitivity", "CloudStorage", "ScreenSaver", "TapToSetup", "Keyboard", "PreferredLanguage", "SpokenLanguage", "WatchMigration", "OnBoarding", "TVProviderSignIn", "TVHomeScreenSync", "Privacy", "TVRoom", "iMessageAndFaceTime", "AppStore", "Safety", "Multitasking", "ActionButton", "TermsOfAddress", "AccessibilityAppearance", "Welcome", "Appearance", "RestoreCompleted", "UpdateCompleted"],
+                "AllowPairing": True,
+                "ConfigurationWasApplied": True,
                 "CloudConfigurationUIComplete": True,
-                "IsSupervised": False
+                "ConfigurationSource": 0,
+                "PostSetupProfileWasInstalled": True,
+                "IsSupervised": False,
             }
             files_to_restore.append(FileToRestore(
                 contents=plistlib.dumps(cloud_config_plist),
