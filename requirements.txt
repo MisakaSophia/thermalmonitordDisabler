@@ -1,4 +1,3 @@
 pymobiledevice3
 PyQt5
 pyqtdarktheme==2.1.0
-pyinstaller
