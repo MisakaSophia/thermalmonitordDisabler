@@ -1,7 +1,7 @@
 # thermalmonitordDisabler
 A tool used to disable thermalmonitord to prevent throttling and screen dimming when iOS devices overheat. You can also disable OTA and UsageTrackingAgent with this.
 
-Works on all versions from iOS 15.7 (possibly) to iOS 18.1. Thermal throttling may be unable to be completely disabled on A15+ devices.
+Works on all versions from iOS 15.7 (possibly) to iOS 18.2 Beta 3. Thermal throttling may be unable to be completely disabled on A15+ devices.
 
 <img src="/images/overview.png" style="height:300px;">
 
