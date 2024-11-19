@@ -32,7 +32,7 @@ class App(QtWidgets.QWidget):
         self.language_pack = {
             "en": {
                 "title": "thermalmonitordDisabler",
-                "modified_by": "Modified by rponeawa from LeminLimez's Nugget.\nFree tool. If you purchased it, please report the seller.",
+                "modified_by": "Modified by rponeawa from LeminLimez's Nugget.\nFree tool. If you purchased it, please report the seller.\n（免费工具，若您是购买而来，请举报卖家。）",
                 "backup_warning": "Please back up your device before using!",
                 "connect_prompt": "Please connect your device and try again!",
                 "connected": "Connected to",
