@@ -6,7 +6,7 @@ Works on all versions from iOS 15.7 (possibly) to iOS 18.2 Beta 3. Thermal throt
 <img src="/images/overview.png" style="height:300px;">
 
 ## Running the Program
-~~Download the latest version from [releases](https://github.com/rponeawa/thermalmonitordDisabler/releases/latest) based on your system, and run thermalmonitordDisabler or thermalmonitordDisabler.exe.~~ (No longer provided)
+Download the latest version from [releases](https://github.com/rponeawa/thermalmonitordDisabler/releases/latest) based on your system, and run thermalmonitordDisabler or thermalmonitordDisabler.exe.
 
 To execute the code, follow these steps:
 
