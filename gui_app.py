@@ -19,8 +19,7 @@ class App(QtWidgets.QWidget):
         self.device = None
 
         locale = QLocale.system().name()
-        # self.language = "zh" if locale.startswith("zh") else "en"
-        self.language = "zh"
+        self.language = "zh" if locale.startswith("zh") else "en"
 
         if self.language == "zh":
             self.verify_user_agreement()
