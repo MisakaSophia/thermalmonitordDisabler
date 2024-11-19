@@ -19,7 +19,11 @@ class App(QtWidgets.QWidget):
         self.device = None
 
         locale = QLocale.system().name()
-        self.language = "zh" if locale.startswith("zh") else "en"
+        # self.language = "zh" if locale.startswith("zh") else "en"
+        self.language = "zh"
+
+        if self.language == "zh":
+            self.verify_user_agreement()
 
         self.thermalmonitord = False
         self.disable_ota = False
@@ -46,7 +50,6 @@ class App(QtWidgets.QWidget):
                     "Disable OTA",
                     "Disable UsageTrackingAgent",
                     "Apply changes",
-                    "切换到简体中文",
                     "Refresh"
                 ]
             },
@@ -69,7 +72,6 @@ class App(QtWidgets.QWidget):
                     "禁用系统更新",
                     "禁用使用情况日志",
                     "应用更改",
-                    "Switch to English",
                     "刷新"
                 ]
             }
@@ -77,6 +79,20 @@ class App(QtWidgets.QWidget):
 
         self.init_ui()
         self.get_device_info()
+
+    def verify_user_agreement(self):
+        required_text = "我未为本工具或相关代操作服务付费，也未通过营销号和视频等途径获知，或从非官方渠道如限速网盘下载本工具"
+        user_input, ok = QtWidgets.QInputDialog.getText(
+            self,
+            "验证声明",
+            "请准确输入以下内容以继续使用本工具：\n\n" + required_text,
+            QtWidgets.QLineEdit.Normal
+        )
+        if not ok or user_input != required_text:
+            QtWidgets.QMessageBox.critical(
+                self, "验证失败", "输入内容不匹配，程序将退出。"
+            )
+            sys.exit()
 
     def set_font(self):
         if platform.system() == "Windows":
@@ -129,13 +145,9 @@ class App(QtWidgets.QWidget):
         self.apply_button.clicked.connect(self.apply_changes)
         self.layout.addWidget(self.apply_button)
 
-        self.refresh_button = QtWidgets.QPushButton(self.language_pack[self.language]["menu_options"][5])
+        self.refresh_button = QtWidgets.QPushButton(self.language_pack[self.language]["menu_options"][4])
         self.refresh_button.clicked.connect(self.get_device_info)
         self.layout.addWidget(self.refresh_button)
-
-        self.switch_language_button = QtWidgets.QPushButton(self.language_pack[self.language]["menu_options"][4])
-        self.switch_language_button.clicked.connect(self.switch_language)
-        self.layout.addWidget(self.switch_language_button)
 
         self.setLayout(self.layout)
         self.show()
@@ -289,25 +301,6 @@ class App(QtWidgets.QWidget):
         finally:
             self.apply_button.setText(self.language_pack[self.language]["menu_options"][3])
             self.apply_button.setEnabled(True)
-
-    def switch_language(self):
-        self.language = "zh" if self.language == "en" else "en"
-        self.setWindowTitle(self.language_pack[self.language]["title"])
-
-        self.modified_by_label.setText(self.language_pack[self.language]["modified_by"])
-        
-        if self.device:
-            self.update_device_info()
-        else:
-            self.device_info.setText(self.language_pack[self.language]["connect_prompt"])
-        
-        self.thermalmonitord_checkbox.setText(self.language_pack[self.language]["menu_options"][0])
-        self.disable_ota_checkbox.setText(self.language_pack[self.language]["menu_options"][1])
-        self.disable_usage_tracking_checkbox.setText(self.language_pack[self.language]["menu_options"][2])
-
-        self.apply_button.setText(self.language_pack[self.language]["menu_options"][3])
-        self.switch_language_button.setText(self.language_pack[self.language]["menu_options"][4])
-        self.refresh_button.setText(self.language_pack[self.language]["menu_options"][5])
 
 if __name__ == "__main__":
     import sys
