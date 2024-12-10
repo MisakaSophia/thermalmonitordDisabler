@@ -1,6 +1,7 @@
 import platform
 import plistlib
 import traceback
+import sys
 
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtSvg import QSvgWidget
@@ -49,8 +50,10 @@ class App(QtWidgets.QWidget):
                     "Disable OTA",
                     "Disable UsageTrackingAgent",
                     "Apply changes",
-                    "Refresh"
-                ]
+                    "Refresh",
+                    "Skip Setup"
+                ],
+                "skip_setup_description": "Uncheck to prevent MDM configuration profiles from being removed. If you do not know what this option does, please keep it checked."
             },
             "zh": {
                 "title": "温控禁用工具",
@@ -71,8 +74,10 @@ class App(QtWidgets.QWidget):
                     "禁用系统更新",
                     "禁用使用情况日志",
                     "应用更改",
-                    "刷新"
-                ]
+                    "刷新",
+                    "跳过向导"
+                ],
+                "skip_setup_description": "取消勾选以防止 MDM 配置文件被移除。若你不知道该选项的作用，请保持其被勾选。"
             }
         }
 
@@ -104,12 +109,12 @@ class App(QtWidgets.QWidget):
         self.set_font()
         
         self.layout = QtWidgets.QVBoxLayout()
+        self.layout.setSpacing(10)
 
         self.modified_by_label = QtWidgets.QLabel(self.language_pack[self.language]["modified_by"])
         self.layout.addWidget(self.modified_by_label)
 
         self.icon_layout = QtWidgets.QHBoxLayout()
-
         self.icon_layout.setAlignment(QtCore.Qt.AlignLeft)
         self.icon_layout.setSpacing(10)
 
@@ -132,13 +137,35 @@ class App(QtWidgets.QWidget):
         self.layout.addWidget(self.device_info)
 
         self.thermalmonitord_checkbox = QtWidgets.QCheckBox(self.language_pack[self.language]["menu_options"][0])
+        self.thermalmonitord_checkbox.setChecked(self.thermalmonitord)
         self.layout.addWidget(self.thermalmonitord_checkbox)
 
         self.disable_ota_checkbox = QtWidgets.QCheckBox(self.language_pack[self.language]["menu_options"][1])
+        self.disable_ota_checkbox.setChecked(self.disable_ota)
         self.layout.addWidget(self.disable_ota_checkbox)
 
         self.disable_usage_tracking_checkbox = QtWidgets.QCheckBox(self.language_pack[self.language]["menu_options"][2])
+        self.disable_usage_tracking_checkbox.setChecked(self.disable_usage_tracking_agent)
         self.layout.addWidget(self.disable_usage_tracking_checkbox)
+
+        self.skip_setup_layout = QtWidgets.QVBoxLayout()
+        self.skip_setup_layout.setSpacing(2)
+
+        self.skip_setup_checkbox = QtWidgets.QCheckBox(self.language_pack[self.language]["menu_options"][5])
+        self.skip_setup_checkbox.setChecked(self.skip_setup)
+        self.skip_setup_checkbox.stateChanged.connect(self.toggle_skip_setup)
+        self.skip_setup_layout.addWidget(self.skip_setup_checkbox)
+
+        self.skip_setup_description_label = QtWidgets.QLabel(self.language_pack[self.language]["skip_setup_description"])
+        self.skip_setup_description_label.setWordWrap(True)
+
+        font = self.skip_setup_description_label.font()
+        font.setPointSize(10)
+        self.skip_setup_description_label.setFont(font)
+        self.skip_setup_description_label.setStyleSheet("color: gray;")
+        self.skip_setup_layout.addWidget(self.skip_setup_description_label)
+
+        self.layout.addLayout(self.skip_setup_layout)
 
         self.apply_button = QtWidgets.QPushButton(self.language_pack[self.language]["menu_options"][3])
         self.apply_button.clicked.connect(self.apply_changes)
@@ -150,6 +177,9 @@ class App(QtWidgets.QWidget):
 
         self.setLayout(self.layout)
         self.show()
+
+    def toggle_skip_setup(self, state):
+        self.skip_setup = state == QtCore.Qt.Checked
 
     def open_link(self, url):
         try:
@@ -197,6 +227,7 @@ class App(QtWidgets.QWidget):
         self.thermalmonitord_checkbox.setEnabled(not disable)
         self.disable_ota_checkbox.setEnabled(not disable)
         self.disable_usage_tracking_checkbox.setEnabled(not disable)
+        self.skip_setup_checkbox.setEnabled(not disable)
         self.apply_button.setEnabled(not disable)
 
     def update_device_info(self):
@@ -302,8 +333,6 @@ class App(QtWidgets.QWidget):
             self.apply_button.setEnabled(True)
 
 if __name__ == "__main__":
-    import sys
-
     qdarktheme.enable_hi_dpi()
     app = QtWidgets.QApplication(sys.argv)
     qdarktheme.setup_theme()
